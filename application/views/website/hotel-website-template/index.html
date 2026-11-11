@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hotel Website Template</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <header class="site-header">
+        <a class="logo" href="#">HOTEL <span>NAME</span></a>
+        <nav class="main-nav">
+            <a href="#stay">Stay</a>
+            <a href="#experience">Experience</a>
+            <a href="#offers">Offers</a>
+            <a href="#about">About</a>
+        </nav>
+        <button class="book-button" data-scroll-booking>Book Now</button>
+        <button class="mobile-menu" aria-label="Open menu">☰</button>
+    </header>
+
+    <main>
+        <!-- HERO / BOOKING -->
+        <section class="hero" id="stay">
+            <div class="hero-content">
+                <p class="eyebrow">BOUTIQUE HOTEL • YOUR CITY</p>
+                <h1>Stays worth<br>remembering.</h1>
+                <p>Replace this text with your hotel's main message or value proposition.</p>
+            </div>
+
+            <div class="booking-box" id="booking">
+                <div class="booking-tabs">
+                    <button class="tab active" data-tab="booking-form">Book a stay</button>
+                    <button class="tab" data-tab="manage-form">Manage reservation</button>
+                </div>
+
+                <form id="booking-form" class="booking-form">
+                    <label>
+                        Destination
+                        <input type="text" value="Hotel Name" placeholder="Destination">
+                    </label>
+
+                    <label>
+                        Check in
+                        <input id="checkin" type="date">
+                    </label>
+
+                    <label>
+                        Check out
+                        <input id="checkout" type="date">
+                    </label>
+
+                    <label class="guest-field">
+                        Rooms & Guests
+                        <button type="button" id="guest-button">1 Room · 2 Adults</button>
+                        <div class="guest-menu" id="guest-menu">
+                            <div><span>Rooms</span>
+                                <div><button type="button" data-count="rooms" data-change="-1">−</button><b id="rooms">1</b><button type="button" data-count="rooms" data-change="1">+</button></div>
+                            </div>
+                            <div><span>Adults</span>
+                                <div><button type="button" data-count="adults" data-change="-1">−</button><b id="adults">2</b><button type="button" data-count="adults" data-change="1">+</button></div>
+                            </div>
+                            <div><span>Children</span>
+                                <div><button type="button" data-count="children" data-change="-1">−</button><b id="children">0</b><button type="button" data-count="children" data-change="1">+</button></div>
+                            </div>
+                        </div>
+                    </label>
+
+                    <label>
+                        Rate
+                        <select>
+                            <option>Best Available</option>
+                            <option>Member Rate</option>
+                            <option>AAA / AARP</option>
+                        </select>
+                    </label>
+
+                    <button class="search-button" type="submit">Search →</button>
+                </form>
+
+                <form id="manage-form" class="manage-form hidden">
+                    <label>Confirmation number<input placeholder="Confirmation number"></label>
+                    <label>Last name<input placeholder="Last name"></label>
+                    <button class="search-button" type="submit">Find reservation →</button>
+                </form>
+
+                <p id="booking-message"></p>
+            </div>
+        </section>
+
+        <!-- INTRO -->
+        <section class="intro section">
+            <p class="eyebrow">WELCOME</p>
+            <h2>Your hotel story starts here.</h2>
+            <p>Use this section for your hotel's introduction, location, history, or main selling point. Keep it short and easy to scan.</p>
+        </section>
+
+        <!-- CONTENT BLOCK 1 -->
+        <section class="split-section section">
+            <div class="placeholder-image image-one" role="img" aria-label="Hotel placeholder image"></div>
+            <div class="content">
+                <p class="eyebrow">THE HOTEL</p>
+                <h2>Designed around the way you travel.</h2>
+                <p>Replace this copy with information about rooms, location, design, service, or the hotel's unique character.</p>
+                <a href="#" class="text-link">Discover the hotel →</a>
+            </div>
+        </section>
+
+        <!-- CONTENT BLOCK 2 -->
+        <section class="split-section reverse section">
+            <div class="content">
+                <p class="eyebrow">FOOD & DRINK</p>
+                <h2>Good food. Good company.</h2>
+                <p>Describe your restaurant, bar, breakfast experience, chef, or signature dining concept here.</p>
+                <a href="#" class="text-link">Explore dining →</a>
+            </div>
+            <div class="placeholder-image image-two" role="img" aria-label="Restaurant placeholder image"></div>
+        </section>
+
+        <!-- AMENITIES -->
+        <section class="amenities section">
+            <div class="section-heading">
+                <p class="eyebrow">HOTEL AMENITIES</p>
+                <h2>Everything you need.</h2>
+            </div>
+            <div class="amenity-grid">
+                <article><span>01</span>
+                    <h3>Free Wi-Fi</h3>
+                    <p>Fast and reliable internet throughout the hotel.</p>
+                </article>
+                <article><span>02</span>
+                    <h3>Fitness</h3>
+                    <p>A dedicated space to keep your routine going.</p>
+                </article>
+                <article><span>03</span>
+                    <h3>Dining</h3>
+                    <p>Local flavors and relaxed dining throughout the day.</p>
+                </article>
+                <article><span>04</span>
+                    <h3>Parking</h3>
+                    <p>Convenient parking options for hotel guests.</p>
+                </article>
+            </div>
+        </section>
+
+        <!-- OFFERS -->
+        <section class="offers section" id="offers">
+            <div class="section-heading">
+                <p class="eyebrow">SPECIAL OFFERS</p>
+                <h2>Something extra for your next stay.</h2>
+            </div>
+            <div class="offer-grid">
+                <article class="offer-card">
+                    <p class="eyebrow">LONGER STAY</p>
+                    <h3>Stay a little longer.</h3>
+                    <p>Offer description goes here. Add your rate, conditions and booking details.</p>
+                    <a href="#" class="text-link">View offer →</a>
+                </article>
+                <article class="offer-card">
+                    <p class="eyebrow">DIRECT BOOKING</p>
+                    <h3>Book direct and save.</h3>
+                    <p>Use this card for a member rate, package, seasonal offer or promotion.</p>
+                    <a href="#" class="text-link">View offer →</a>
+                </article>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="cta section" id="about">
+            <p class="eyebrow">MAKE IT YOURS</p>
+            <h2>Ready for your next stay?</h2>
+            <p>Replace this section with your hotel's final call to action.</p>
+            <button data-scroll-booking>Book your stay →</button>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-top">
+            <div>
+                <a class="logo" href="#">HOTEL <span>NAME</span></a>
+                <p>Replace with hotel address, phone number and email.</p>
+            </div>
+            <div class="footer-links">
+                <a href="#">Rooms</a>
+                <a href="#">Dining</a>
+                <a href="#">Offers</a>
+                <a href="#">Contact</a>
+                <a href="#">Privacy</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>© 2026 Hotel Name</span>
+            <span>Website template</span>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>

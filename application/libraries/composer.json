@@ -1,0 +1,8 @@
+{
+    "require": {
+      "microsoft/azure-storage-blob": "*"
+    },
+    "config": {
+      "platform-check": false
+  }
+}

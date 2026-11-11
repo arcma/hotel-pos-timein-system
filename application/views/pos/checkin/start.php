@@ -1,0 +1,11 @@
+<?php defined('BASEPATH') OR exit('No direct script access allowed'); $reserved=!empty($reservation); ?>
+<div class="container-fluid" style="max-width:850px;background:#fff;padding:20px;border:1px solid #ccc;border-radius:10px"><h2>Check-in — <?= html_escape($room->rmTitle) ?></h2>
+<?php if($this->session->flashdata('error')): ?><div class="alert alert-danger"><?= html_escape($this->session->flashdata('error')) ?></div><?php endif; ?>
+<?php if($stay): ?><div class="alert alert-warning">This room is already occupied. <a href="<?= site_url('pos/checkin/orders/'.$stay->stayID) ?>">Open room orders</a></div><?php else: ?>
+<form method="post" action="<?= site_url('pos/checkin/do_start/'.$room->rmID) ?>">
+<?php if($reserved): ?><div class="alert alert-info">Today's reservation will be used. Payment is collected now, at guest check-in.</div><?php endif; ?>
+<div class="form-group"><label>Guest name</label><input class="form-control" name="guest_name" required value="<?= html_escape($reservation->resGuestName??'') ?>" <?= $reserved?'readonly':'' ?>></div>
+<?php if(!$reserved): ?><div class="form-group"><label>Room discount</label><select name="room_discount_id" class="form-control"><option value="">No discount</option><?php foreach($discounts as $d): ?><option value="<?= (int)$d->disID ?>"><?= html_escape($d->disName) ?> (<?= (float)$d->disPercent ?>%)</option><?php endforeach; ?></select></div><div class="form-group"><label>Other charges</label><input class="form-control" name="other_charges" type="number" min="0" step="0.01" value="0"></div><?php else: ?><p>Room amount due: ₱<?= number_format(max(0,(float)$reservation->resPrice-(float)$reservation->resDiscountAmount+(float)$reservation->resOtherCharges),2) ?></p><?php endif; ?>
+<div class="form-group"><label>Payment type</label><select class="form-control" name="payment_type"><option value="cash">Cash</option><option value="card">Card</option></select></div>
+<div class="form-group"><label>Room payment (paid at check-in)</label><input class="form-control" name="payment" type="number" min="0" step="0.01" required></div>
+<button class="btn btn-primary">Confirm Check-in</button> <a class="btn btn-default" href="<?= site_url('pos/checkin') ?>">Cancel</a></form><?php endif; ?></div>

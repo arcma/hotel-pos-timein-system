@@ -1,0 +1,323 @@
+/*
+when making changes in this file and pushing it to MASTER branch.
+please also update the file in the CDN Assets folder.
+ If the assets location setting is set to CDN
+*/
+
+body {
+    padding-bottom: 30px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+}
+
+/* Theme Colors */
+.btn-primary {
+    background-color: #4383C4 !important;
+    border: 0;
+}
+
+.alert-primary{
+    border: 1px solid #4383C4;
+    background-color: #84A9CE;
+    color: #172E45;
+}
+
+.text-primary {
+    color: #4383C4 !important;
+}
+
+.btn-success {
+    background-color: #0A7025 !important;
+    border: 0;
+    color:white;
+}
+
+.alert-success{
+    border: 1px solid #0A7025;
+    background-color: #5DF084;
+    color: #0A7025 !important;
+}
+
+.btn-danger{
+    background-color: #EF4548 !important;
+}
+
+.alert-danger {
+    background-color: #F28F91 !important;
+    border: 1px solid #EF4548;
+    color: #EF4548;
+}
+
+.text-danger {
+    color: #EF4548 !important;
+}
+
+.btn-warning {
+    background-color: #FBB217 !important;
+}
+
+/* End of Theme Colors */
+
+.theme-dropdown .dropdown-menu {
+    position: static;
+    display: block;
+    margin-bottom: 20px;
+}
+
+.theme-showcase>p>.btn {
+    margin: 5px 0;
+}
+
+.theme-showcase .navbar .container {
+    width: auto;
+}
+
+.participantRow {
+    cursor: pointer;
+}
+
+.participantRow>td {
+    vertical-align: middle !important;
+}
+
+.text-light-green {
+    color: #5cb85c;
+}
+
+.switch {
+    padding-left: 65px;
+    padding-top: 6px;
+    position: relative;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+    width: 60px;
+    height: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked+.slider {
+    background-color: #2196F3;
+}
+
+input:focus+.slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked+.slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+.back-to-top {
+    cursor: pointer;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: none;
+}
+
+.scroll-to-bottom {
+    cursor: pointer;
+    position: fixed;
+    top: 100px;
+    right: 20px;
+}
+
+.custom-upload-button {
+    background-color: #efefef;
+    height: 34px;
+    padding: 7px;
+    border: 1px solid #b9b9b9;
+    border-radius: 3px;
+    margin-bottom: 0;
+}
+
+.table-content-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.table-content-header h1 {
+    margin: 0px;
+}
+
+.table-content-controls button,
+.table-content-controls a {
+    margin: 0 5px;
+}
+
+.table-content-header .table-content-controls {
+
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+
+}
+
+.deco-none {
+    color: inherit;
+    text-decoration: inherit;
+}
+
+.deco-none:link {
+    color: inherit;
+    text-decoration: inherit;
+}
+
+.deco-none:hover {
+    color: inherit;
+    text-decoration: inherit;
+}
+
+/* Login Page Styles  */
+.login-container {
+    min-height: 85vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin-login {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 5px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 550px;
+}
+
+.btn-admin-login {
+    background-color: #40bfb8;
+    border-color: #40bfb8;
+    color: #ffffff;
+}
+
+.btn-admin-login:hover,
+.btn-admin-login:focus,
+.btn-admin-login:active {
+    background-color: #30a9a0;
+    border-color: #30a9a0;
+    color: #ffffff;
+}
+
+.centered-captcha {
+    display: inline-block;
+}
+
+.form-group.text-center {
+    text-align: -webkit-center;
+}
+
+.helpdesk-icon {
+    top: 0px;
+    font-size: 20px;
+}
+
+.event-title {
+    background-color: #2c3e52;
+    text-align: center;
+}
+
+.event-title a {
+    color: white !important;
+}
+
+.event-title .navbar-brand {
+    float: unset;
+}
+
+.event-title .navbar-header {
+    float: unset;
+    padding: 10px 0px;
+}
+
+div[role=main] {
+    margin-top: 50px;
+}
+
+.navbar,
+.navbar li,
+#participants {
+    font-size: 14px;
+}
+
+
+#add_participant,
+::placeholder,
+option,
+.form-select,
+input, .input-group-text {
+    font-size: 14px !important;
+}
+
+/* ADD_PARTICIPANTS */
+
+#add_participant .table>tbody>tr>td {
+    vertical-align: middle !important;
+}
+/* END OF ADD_PARTICIPANTS */
+
+/* Badge Printing */
+#print-templates,
+.btn,
+a.dropdown-item {
+    font-size: 14px;
+}
+/*End Of Badge Printing*/
+
+/* Print Seeds */
+#print-seed textarea{
+    font-size: 14px !important;
+    background-color: #EEEEEE;
+}
+/* End of Print Seeds */
+
+.form-label{
+    font-weight: 600;
+}
+
+/*  
+when making changes in this file and pushing it to MASTER branch.
+please also update the file in the CDN Assets folder.
+ If the assets location setting is set to CDN
+*/
