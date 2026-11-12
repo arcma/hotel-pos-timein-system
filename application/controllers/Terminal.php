@@ -46,11 +46,13 @@ class Terminal extends MY_Controller
 
     public function poll()
     {
+     
         if (!$this->requirePrintAccess()) {
             $this->output->set_status_header(401)->set_content_type('application/json')
                 ->set_output(json_encode(array('ok' => false, 'message' => 'Authentication required.')));
             return;
         }
+       
 
         $printed = array();
         $failed = array();
@@ -125,20 +127,32 @@ class Terminal extends MY_Controller
         if (!$this->requirePrintApiToken()) return;
         $result = array();
         foreach ($this->Prints_model->getPending(50) as $job) {
+            $printType = (int) $job->prtType;
+            // tbl_settings is the source of truth for printer destinations.
+            // Type 3 is a kitchen ticket; types 1 and 2 use the cashier printer.
+            $printerId = ($printType === 3) ? 'kitchen' : 'cashier';
+            $printerIp = ($printType === 3)
+                ? trim((string) $this->Settings_model->get_setting('kitchen_ip'))
+                : trim((string) $this->Settings_model->get_setting('cashier_ip'));
+
             $payload = $this->buildPrintPayload($job);
             if ($payload === false) {
                 $result[] = array(
                     'prtID' => (int) $job->prtID,
-                    'prtType' => (int) $job->prtType,
+                    'prtType' => $printType,
+                    'printer_id' => $printerId,
+                    'printer_ip' => $printerIp,
                     'error' => 'Could not build print payload from the current order data.'
                 );
                 continue;
             }
             $result[] = array(
                 'prtID' => (int) $job->prtID,
-                'prtType' => (int) $job->prtType,
+                'prtType' => $printType,
                 'prtCartID' => $job->prtCartID === null ? null : (int) $job->prtCartID,
                 'prtKitchenID' => $job->prtKitchenID === null ? null : (int) $job->prtKitchenID,
+                'printer_id' => $printerId,
+                'printer_ip' => $printerIp,
                 'prtDateCreated' => $job->prtDateCreated,
                 'payload_base64' => base64_encode($payload)
             );
