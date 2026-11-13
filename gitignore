@@ -1,0 +1,45 @@
+# Root-level catalog/export folder
+/_catalog/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+!.env.sample
+
+# CodeIgniter runtime files
+/application/cache/*
+!/application/cache/index.html
+/application/logs/*
+!/application/logs/index.html
+
+# Runtime data and generated files
+*.log
+*.tmp
+*.temp
+*.swp
+*.swo
+
+# Local database files (keep SQL dumps/migrations tracked)
+*.sqlite
+*.sqlite3
+*.db
+
+# Dependencies and build output
+/node_modules/
+/vendor/
+/dist/
+/build/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE/editor settings
+.idea/
+.vscode/
+*.code-workspace
+
+# Local development overrides
+/docker-compose.override.yml
