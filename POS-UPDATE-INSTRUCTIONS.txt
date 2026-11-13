@@ -1,0 +1,52 @@
+POS UPDATE — BAR/PANTRY SETTINGS, HRIS LABELS, CART TABLE FIX, CMS PAGE DROPDOWNS
+
+Included changes
+
+1) Printer settings
+- Added bar_ip and pantry_ip to POS > Settings.
+- Values are stored in the existing key/value tbl_settings table as SeName/SeSettings.
+- Added a safe, repeatable SQL migration:
+  database/migrations/20261113_add_bar_pantry_printer_settings.sql
+- Added blank bar_ip and pantry_ip seed rows to arseniossilay.sql.
+- This update only adds settings. Bar and Pantry print routing is not enabled yet.
+
+2) HRIS calendar wording
+- Visible "Check In"/"check-in" wording on /hris/calendar has been relabelled "Time In"/"time-in".
+- Internal form action value "checkin" is intentionally unchanged so attendance processing continues to work.
+
+3) Cart/table assignment correction
+- add_cart now uses the table ID from the URL route as the authoritative table ID, rather than trusting the hidden POST field.
+- The kitchen-order query explicitly filters by tbl_cart.ctTable and tbl_cart.ctStatus.
+- The kitchen-order handler verifies the cart row belongs to the requested table and stores that requested table ID in tbl_kitchen.kitTable.
+- Change Table now rejects empty, invalid, or same-table targets instead of updating cart rows with an invalid destination.
+- This addresses stale hidden table values and guards against cross-table kitchen assignment. Existing incorrect historical rows are not automatically rewritten.
+
+4) CMS navigation and footer
+- Changed the listing column title from Link to Page.
+- Replaced the free-text link field with a dropdown populated from tbl_pages.pageSlug.
+- Dropdown values are absolute page routes: /pages/{pageSlug}.
+- Existing non-page links are retained as a selected "Current link" option to avoid silently losing existing menu/footer links.
+- New dropdown selections are validated against tbl_pages before saving.
+- Dynamic Add item dropdowns are populated from the same page list.
+
+Installation
+1. Back up the live POS project and database.
+2. Deploy the updated project files.
+3. Run database/migrations/20261113_add_bar_pantry_printer_settings.sql against the existing database. It is safe to run more than once.
+4. Open POS > Settings and enter the Bar and Pantry printer IP addresses when those printers are ready.
+5. Open CMS > Navigations and CMS > Footers; review each Page dropdown and save.
+6. Test adding an item from Table 1 and confirm it remains on Table 1 after Order Kitchen.
+7. Test HRIS calendar labels.
+
+Printer credentials
+- application/config/print_api.php was not modified.
+- The Python printer terminal and its config were not modified.
+- Existing kitchen/cashier printer settings and token remain intact.
+
+7) CMS dropdown display correction
+- The Navigation and Footer Page dropdown now displays each option as its route, e.g. /pages/sample, /pages/test, /pages/aboutus.
+- The saved option value remains the same /pages/{pageSlug} route.
+
+8) Kitchen print alignment and top spacing
+- Kitchen ticket heading, table name, and date are explicitly set to centered ESC/POS alignment.
+- Added approximately 10px worth of extra top feed before the kitchen ticket content (34 to 44 feed dots).

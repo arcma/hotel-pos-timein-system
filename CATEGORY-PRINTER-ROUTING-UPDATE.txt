@@ -1,0 +1,26 @@
+POS UPDATE — CATEGORY PRINTER ROUTING
+
+Changes:
+- Kitchen ticket top feed increased from 26 to 34 ESC/POS feed dots (8 additional dots).
+- Category add/edit forms save catPrinter:
+    0 = None (do not print)
+    1 = Kitchen (uses kitchen_ip)
+    2 = Bar (configured for future; not printed yet)
+    3 = Pantry (configured for future; not printed yet)
+- Categories list displays the printer destination.
+- On Order Kitchen, all newly ordered items continue to be recorded in tbl_kitchen.
+- Only items whose product category has catPrinter = 1 are included in the single combined kitchen print job.
+- catPrinter = 0, 2, or 3 are not sent to the kitchen printer in this update.
+- Existing application/config/print_api.php token file was not modified.
+- Python printer terminal is unchanged.
+
+Install:
+1. Back up the current POS project.
+2. Extract/deploy this ZIP, preserving your existing application/config/print_api.php if preferred.
+3. Your live database already has tbl_categories.catPrinter, according to your note.
+4. For a fresh database restore, the included SQL dump now contains catPrinter with default 0.
+5. Set each category destination in POS > Categories > Edit.
+6. Test a table with categories set to 0 and 1. Only catPrinter=1 items should print.
+
+Bar and Pantry:
+- Values 2 and 3 are saved and displayed, but bar_id and pantry_ip routing are intentionally not implemented yet.

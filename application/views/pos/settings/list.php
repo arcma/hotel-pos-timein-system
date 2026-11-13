@@ -89,7 +89,19 @@
             <td>Set IP address on cashier receipt printer</td>
             <td><input type="text" class="form-control" name="cashier_ip" placeholder="Enter IP" value="<?=html_escape($settings['cashier_ip'] ?? '')?>"></td>
         </tr>
+                <tr>
+            <td>5</td>
+            <td>Bar printer IP</td>
+            <td>Set IP address on the bar printer</td>
+            <td><input type="text" class="form-control" name="bar_ip" placeholder="Enter IP" value="<?=html_escape($settings['bar_ip'] ?? '')?>"></td>
+        </tr>
         <tr>
+            <td>6</td>
+            <td>Pantry printer IP</td>
+            <td>Set IP address on the pantry printer</td>
+            <td><input type="text" class="form-control" name="pantry_ip" placeholder="Enter IP" value="<?=html_escape($settings['pantry_ip'] ?? '')?>"></td>
+        </tr>
+<tr>
 			<td colspan="4">
 				<button type="submit" class="btn btn-primary">Update</button>
                 <a href="<?=base_url('terminal/prints')?>" class="btn btn-outline-secondary ml-2">Print Terminal</a>

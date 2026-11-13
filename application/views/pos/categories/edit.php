@@ -27,6 +27,15 @@
 			<input type="text" class="form-control" id="input_name" name="name" placeholder="Enter category name" value="<?=$category->catName?>" required>
 		</div>
 		<div class="mb-3">
+			<label for="input_printer" class="form-label">Printer destination</label>
+			<select class="form-control" id="input_printer" name="printer">
+				<option value="0" <?php echo ((int) (isset($category->catPrinter) ? $category->catPrinter : 0) === 0) ? 'selected' : ''; ?>>None (do not print)</option>
+				<option value="1" <?php echo ((int) (isset($category->catPrinter) ? $category->catPrinter : 0) === 1) ? 'selected' : ''; ?>>Kitchen</option>
+				<option value="2" <?php echo ((int) (isset($category->catPrinter) ? $category->catPrinter : 0) === 2) ? 'selected' : ''; ?>>Bar</option>
+				<option value="3" <?php echo ((int) (isset($category->catPrinter) ? $category->catPrinter : 0) === 3) ? 'selected' : ''; ?>>Pantry</option>
+			</select>
+		</div>
+		<div class="mb-3">
 			<label for="input_sort_order" class="form-label">Sort order</label>
 			<input type="number" class="form-control" id="input_sort_order" name="order" placeholder="Enter sort order" value="<?=$category->catSortOrder?>" required>
 		</div>

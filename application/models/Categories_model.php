@@ -50,6 +50,7 @@ class Categories_model extends CI_Model
 		$data = array(
             $this->tablePrefix.'Name' => $postData['name'],
             $this->tablePrefix.'SortOrder' => $postData['order'],
+            $this->tablePrefix.'Printer' => isset($postData['printer']) ? (int) $postData['printer'] : 0,
             $this->tablePrefix.'Date_Created' => date('Y-m-d H:i:s'),
             $this->tablePrefix.'Date_modified' => date('Y-m-d H:i:s'),
             $this->tablePrefix.'Status' => 1,
@@ -62,6 +63,7 @@ class Categories_model extends CI_Model
 		$data = array(
             $this->tablePrefix.'Name' => $postData['name'],
             $this->tablePrefix.'SortOrder' => $postData['order'],
+            $this->tablePrefix.'Printer' => isset($postData['printer']) ? (int) $postData['printer'] : 0,
 			$this->tablePrefix.'Date_modified' => date('Y-m-d H:i:s'), 
         );
         $this->db->update($this->tableName, $data, array($this->tablePrefix.'ID' => $id));

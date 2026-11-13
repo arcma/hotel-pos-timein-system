@@ -12,11 +12,21 @@
   <div class="footer-editor-card">
    <div class="mb-3"><label for="footer-description"><strong>Footer description</strong></label><textarea id="footer-description" name="description" rows="3" placeholder="Enter a short description for your footer"><?= $e($description ?? '') ?></textarea></div>
    <div class="d-flex justify-content-between align-items-center mb-3"><h4 class="mb-0">Footer links</h4><button type="button" class="btn btn-outline-primary" id="add-footer-item"><i class="fa fa-plus"></i> Add item</button></div>
-   <table><thead><tr><th style="width:35%">Name</th><th style="width:40%">Link</th><th>Actions</th></tr></thead><tbody id="footer-items">
+   <table><thead><tr><th style="width:35%">Name</th><th style="width:40%">Page</th><th>Actions</th></tr></thead><tbody id="footer-items">
    <?php foreach($items as $i=>$item): $item=is_array($item)?$item:array(); ?>
     <tr class="footer-item-row">
      <td data-label="Name"><input type="text" name="items[<?=$i?>][label]" value="<?=$e($item['label']??'')?>" placeholder="Footer link label"></td>
-     <td data-label="Link"><input type="text" name="items[<?=$i?>][link]" value="<?=$e($item['link']??'')?>" placeholder="/rooms or https://example.com"></td>
+     <td data-label="Page">
+      <select name="items[<?=$i?>][link]" class="form-control page-link-select">
+       <option value="">Select page</option>
+       <?php $currentLink = (string)($item['link'] ?? ''); $knownPageLinks = array(); foreach ($pages as $page): $pageLink = '/pages/' . $page->pageSlug; $knownPageLinks[] = $pageLink; ?>
+        <option value="<?=$e($pageLink)?>" <?=$currentLink === $pageLink ? 'selected' : ''?>><?=$e($pageLink)?></option>
+       <?php endforeach; ?>
+       <?php if ($currentLink !== '' && !in_array($currentLink, $knownPageLinks, true)): ?>
+        <option value="<?=$e($currentLink)?>" selected>Current link: <?=$e($currentLink)?></option>
+       <?php endif; ?>
+      </select>
+     </td>
      <td data-label="Actions"><div class="footer-row-actions"><label class="footer-enabled"><input type="checkbox" name="items[<?=$i?>][enabled]" value="1" <?=!empty($item['enabled'])?'checked':''?>> Enable</label><button type="button" class="btn btn-sm btn-outline-danger delete-footer-item">Delete</button></div></td>
     </tr>
    <?php endforeach; ?>
@@ -28,8 +38,9 @@
 <script>
 (function(){
  const body=document.getElementById('footer-items'),add=document.getElementById('add-footer-item');
- function renumber(){[...body.querySelectorAll('tr')].forEach((row,i)=>row.querySelectorAll('input').forEach(input=>{input.name=input.name.replace(/items\[\d+\]/,'items['+i+']');}));}
- function addRow(){const i=body.querySelectorAll('tr').length,row=document.createElement('tr');row.className='footer-item-row';row.innerHTML='<td data-label="Name"><input type="text" name="items['+i+'][label]" placeholder="Footer link label"></td><td data-label="Link"><input type="text" name="items['+i+'][link]" placeholder="/rooms or https://example.com"></td><td data-label="Actions"><div class="footer-row-actions"><label class="footer-enabled"><input type="checkbox" name="items['+i+'][enabled]" value="1" checked> Enable</label><button type="button" class="btn btn-sm btn-outline-danger delete-footer-item">Delete</button></div></td>';body.appendChild(row);}
+ function renumber(){[...body.querySelectorAll('tr')].forEach((row,i)=>row.querySelectorAll('input, select').forEach(input=>{input.name=input.name.replace(/items\[\d+\]/,'items['+i+']');}));}
+ const pageOptions = <?= json_encode(array_map(function($page){ return array('value' => '/pages/' . $page->pageSlug, 'label' => '/pages/' . $page->pageSlug); }, $pages), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>;
+ function addRow(){const i=body.querySelectorAll('tr').length,row=document.createElement('tr');row.className='footer-item-row';row.innerHTML='<td data-label="Name"><input type="text" name="items['+i+'][label]" placeholder="Footer link label"></td><td data-label="Page"><select class="form-control page-link-select" name="items['+i+'][link]"><option value="">Select page</option>'+pageOptions.map(p=>'<option value="'+String(p.value).replace(/&/g,'&amp;').replace(/"/g,'&quot;')+'">'+String(p.label).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</option>').join('')+'</select></td><td data-label="Actions"><div class="footer-row-actions"><label class="footer-enabled"><input type="checkbox" name="items['+i+'][enabled]" value="1" checked> Enable</label><button type="button" class="btn btn-sm btn-outline-danger delete-footer-item">Delete</button></div></td>';body.appendChild(row);}
  add.addEventListener('click',addRow);
  body.addEventListener('click',e=>{if(e.target.classList.contains('delete-footer-item')){e.target.closest('tr').remove();renumber();}});
 })();

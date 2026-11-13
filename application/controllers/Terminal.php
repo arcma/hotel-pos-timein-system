@@ -201,6 +201,20 @@ class Terminal extends MY_Controller
     {
         switch ((int) $job->prtType) {
             case 3:
+                // New kitchen jobs store all newly ordered tbl_kitchen IDs in prtData.
+                // Older single-item jobs remain supported through prtKitchenID.
+                $snapshot = !empty($job->prtData) ? json_decode($job->prtData, true) : null;
+                if (is_array($snapshot) && !empty($snapshot['kitchen_ids']) && is_array($snapshot['kitchen_ids'])) {
+                    $items = array();
+                    foreach ($snapshot['kitchen_ids'] as $kitchenId) {
+                        $item = $this->Kitchen_model->getPrinterItem((int) $kitchenId);
+                        if ($item) {
+                            $items[] = $item;
+                        }
+                    }
+                    return !empty($items) ? $this->print_template->buildKitchenBatchTicket($items) : false;
+                }
+
                 $item = $this->Kitchen_model->getPrinterItem($job->prtKitchenID);
                 return $item ? $this->print_template->buildKitchenTicket($item) : false;
             case 2:

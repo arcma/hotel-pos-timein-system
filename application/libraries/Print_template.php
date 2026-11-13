@@ -9,12 +9,28 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 class Print_template
 {
-    /** Build an ESC/POS kitchen ticket. */
+    /** Build a kitchen ticket. Kept for compatibility with older single-item jobs. */
     public function buildKitchenTicket($item)
     {
+        return $this->buildKitchenBatchTicket(array($item));
+    }
+
+    /** Build one kitchen ticket containing every newly ordered item. */
+    public function buildKitchenBatchTicket($items)
+    {
+        if (empty($items)) {
+            return false;
+        }
+
+        $firstItem = reset($items);
+        $tableName = !empty($firstItem->tbName) ? $firstItem->tbName : 'N/A';
+
+        // Add approximately 10px worth of extra top feed while keeping the kitchen heading centered.
         list($ticket, $columns, $rule) = $this->ticketStart(
             'PRINT ORDER',
-            strtoupper($item->tbName ? $item->tbName : 'N/A')
+            strtoupper($tableName),
+            false,
+            44
         );
 
         $qtyWidth = 7;
@@ -23,18 +39,20 @@ class Print_template
         $ticket .= sprintf('%-' . $nameWidth . 's%' . $qtyWidth . 's', 'Name', 'Qty') . "\n";
         $ticket .= $rule . "\n";
 
-        $productName = $item->prodName ? $item->prodName : 'Unknown product';
-        $lines = $this->wrapText($productName, $nameWidth);
+        foreach ($items as $item) {
+            $productName = !empty($item->prodName) ? $item->prodName : 'Unknown product';
+            $lines = $this->wrapText($productName, $nameWidth);
 
-        foreach ($lines as $index => $line) {
-            if ($index === 0) {
-                $ticket .= sprintf(
-                    '%-' . $nameWidth . 's%' . $qtyWidth . 's',
-                    $line,
-                    'x' . (int) $item->kitQty
-                ) . "\n";
-            } else {
-                $ticket .= $line . "\n";
+            foreach ($lines as $index => $line) {
+                if ($index === 0) {
+                    $ticket .= sprintf(
+                        '%-' . $nameWidth . 's%' . $qtyWidth . 's',
+                        $line,
+                        'x' . (int) $item->kitQty
+                    ) . "\n";
+                } else {
+                    $ticket .= $line . "\n";
+                }
             }
         }
 
@@ -162,14 +180,14 @@ class Print_template
         return $output;
     }
 
-    private function ticketStart($heading, $subheading = '', $showBusinessName = false)
+    private function ticketStart($heading, $subheading = '', $showBusinessName = false, $topFeedDots = 18)
     {
         list($left, $printWidth, $columns) = $this->printerGeometry();
 
         $ESC = "\x1B";
         $GS = "\x1D";
         $ticket = $ESC . "@";
-        $ticket .= $ESC . "j" . chr(18);
+        $ticket .= $ESC . "j" . chr(max(0, min(255, (int) $topFeedDots)));
         $ticket .= $GS . "L" . pack('v', $left) . $GS . "W" . pack('v', $printWidth);
         $ticket .= $ESC . "a" . "\x01";
 
@@ -179,14 +197,14 @@ class Print_template
             $ticket .= $GS . "!" . "\x00" . $ESC . "E" . "\x00";
         }
 
-        $ticket .= $ESC . "E" . "\x01";
+        $ticket .= $ESC . "a" . "\x01" . $ESC . "E" . "\x01";
         $ticket .= $this->escText($heading) . "\n" . $ESC . "E" . "\x00";
 
         if ($subheading !== '') {
-            $ticket .= $this->escText($subheading) . "\n";
+            $ticket .= $ESC . "a" . "\x01" . $this->escText($subheading) . "\n";
         }
 
-        $ticket .= date('M d, Y | h:i A') . "\n";
+        $ticket .= $ESC . "a" . "\x01" . date('M d, Y | h:i A') . "\n";
         $ticket .= $ESC . "a" . "\x00";
         $ticket .= str_repeat('-', $columns) . "\n";
 

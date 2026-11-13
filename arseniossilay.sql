@@ -88,6 +88,7 @@ CREATE TABLE `tbl_cart` (
 CREATE TABLE `tbl_categories` (
   `catID` int(10) NOT NULL,
   `catName` varchar(255) DEFAULT NULL,
+  `catPrinter` tinyint(1) NOT NULL DEFAULT 0 COMMENT '0=None, 1=Kitchen, 2=Bar, 3=Pantry',
   `catSortOrder` int(10) DEFAULT NULL,
   `catDate_created` datetime DEFAULT NULL,
   `catDate_modified` datetime DEFAULT NULL,
@@ -98,10 +99,10 @@ CREATE TABLE `tbl_categories` (
 -- Dumping data for table `tbl_categories`
 --
 
-INSERT INTO `tbl_categories` (`catID`, `catName`, `catSortOrder`, `catDate_created`, `catDate_modified`, `catStatus`) VALUES
-(1, 'Meals', 1, '2026-11-03 14:41:41', '2026-11-03 14:41:41', 1),
-(2, 'Drinks', 2, '2026-11-03 14:41:41', '2026-11-03 14:41:41', 1),
-(3, 'Desserts', 3, '2026-11-03 14:41:41', '2026-11-03 14:41:41', 1);
+INSERT INTO `tbl_categories` (`catID`, `catName`, `catPrinter`, `catSortOrder`, `catDate_created`, `catDate_modified`, `catStatus`) VALUES
+(1, 'Meals', 1, 1, '2026-11-03 14:41:41', '2026-11-03 14:41:41', 1),
+(2, 'Drinks', 0, 2, '2026-11-03 14:41:41', '2026-11-03 14:41:41', 1),
+(3, 'Desserts', 0, 3, '2026-11-03 14:41:41', '2026-11-03 14:41:41', 1);
 
 -- --------------------------------------------------------
 
@@ -598,7 +599,9 @@ INSERT INTO `tbl_settings` (`SeID`, `SeName`, `SeSettings`, `SeLastModified`) VA
 (2, 'userKitchen', '1a1dc91c907325c69271ddf0c944bc72', NULL),
 (5, 'kitchen_ip', '192.168.1.12', '2026-11-06 22:52:14'),
 (6, 'navMenu', '[{\"label\":\"Rooms\",\"link\":\"/rooms\",\"enabled\":1}]', '2026-11-04 20:31:51'),
-(7, 'cashier_ip', '192.168.1.12', '2026-11-07 02:19:05');
+(7, 'cashier_ip', '192.168.1.12', '2026-11-07 02:19:05'),
+(8, 'bar_ip', '', NULL),
+(9, 'pantry_ip', '', NULL);
 
 -- --------------------------------------------------------
 

@@ -7,12 +7,14 @@ class Navigations extends MY_Controller
     {
         parent::__construct();
         $this->load->model('Settings_model');
+        $this->load->model('Cms_pages_model');
     }
 
     public function index()
     {
         $items = json_decode((string)$this->Settings_model->get_setting('navMenu'), true);
         $data['items'] = is_array($items) ? array_values($items) : array();
+        $data['pages'] = $this->Cms_pages_model->all();
         $data['title'] = 'navigations';
         $data['flash_message'] = $this->session->flashdata('nav_message');
         $data['flash_type'] = $this->session->flashdata('nav_type');
@@ -25,6 +27,15 @@ class Navigations extends MY_Controller
     {
         if (strtoupper($this->input->method()) !== 'POST') show_404();
         $posted = $this->input->post('items');
+        $existingItems = json_decode((string) $this->Settings_model->get_setting('navMenu'), true);
+        $legacyLinks = array();
+        if (is_array($existingItems)) {
+            foreach ($existingItems as $existingItem) {
+                if (is_array($existingItem) && !empty($existingItem['link'])) $legacyLinks[] = (string) $existingItem['link'];
+            }
+        }
+        $validSlugs = array();
+        foreach ($this->Cms_pages_model->all() as $page) $validSlugs[(string) $page->pageSlug] = true;
         $items = array();
         if (is_array($posted)) {
             foreach ($posted as $item) {
@@ -32,8 +43,12 @@ class Navigations extends MY_Controller
                 $label = trim(strip_tags((string)($item['label'] ?? '')));
                 $link = trim((string)($item['link'] ?? ''));
                 if ($label === '' && $link === '') continue;
-                // Permit local paths, anchors, and http(s) URLs only.
-                if ($link !== '' && !preg_match('~^(https?://|/|#|mailto:|tel:)~i', $link)) $link = '/' . ltrim($link, '/');
+                if (preg_match('~^/?pages/([a-zA-Z0-9_-]+)$~', $link, $match)) {
+                    if (!isset($validSlugs[$match[1]])) continue;
+                    $link = '/pages/' . $match[1];
+                } elseif (!in_array($link, $legacyLinks, true)) {
+                    continue;
+                }
                 $items[] = array(
                     'label' => $label,
                     'link' => $link,

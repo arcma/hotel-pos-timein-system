@@ -112,10 +112,12 @@ class Cart_model extends CI_Model
 	}
 	
 	public function getUnserved($table_id){
-        $this->db->select();
+        $this->db->select('tbl_cart.*, tbl_products.prodCategory, tbl_categories.catPrinter');
         $this->db->from($this->tableName);
-		$this->db->where($this->tablePrefix.'Table', $table_id);
-		$this->db->where($this->tablePrefix.'Status', 0);
+        $this->db->join('tbl_products', 'tbl_cart.ctProduct = tbl_products.prodID', 'left');
+        $this->db->join('tbl_categories', 'tbl_products.prodCategory = tbl_categories.catID', 'left');
+		$this->db->where('tbl_cart.ctTable', (int) $table_id);
+		$this->db->where('tbl_cart.ctStatus', 0);
         $query = $this->db->get();
         return $query->result();
 	}

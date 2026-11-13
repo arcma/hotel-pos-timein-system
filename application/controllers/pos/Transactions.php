@@ -138,6 +138,8 @@ class Transactions extends MY_Controller
 	public function add_cart($tableID = false){
 		if($tableID && isset($_POST)){
 			$postData = $_POST;
+            // The URL table ID is authoritative; ignore a stale hidden form value.
+            $postData['table'] = (int) $tableID;
 			// $qty = $postData['qty'];
 			// for($x == 0; $x < $qty; $x++){
 				$products = $this->Products_model->get($postData['product']);
@@ -344,8 +346,13 @@ class Transactions extends MY_Controller
 	}
 	
 	public function change_table($table_id){
-		if(isset($_POST)){
-			$new_table = $_POST['table_change'];
+        if ($this->input->method(TRUE) === 'POST') {
+            $new_table = (int) $this->input->post('table_change');
+            if ($new_table <= 0 || $new_table === (int) $table_id || !$this->Tables_model->get($new_table)) {
+                $this->session->set_flashdata('error', 'Please select a valid destination table');
+                redirect('pos/transactions/order/'.$table_id);
+                return false;
+            }
 			$postData['ctTable'] = $new_table;
 			$this->Cart_model->update_byTable($table_id, $postData);
 			
@@ -363,42 +370,65 @@ class Transactions extends MY_Controller
 	
 	public function order_kitchen($table_id){
 		$unserved_cart = $this->Cart_model->getUnserved($table_id);
-		
-		if(count($unserved_cart)){
-			$cart_items_id = array();
-			foreach($unserved_cart as $items){
-				$cart_items_id[] = $items->ctID;
-				$this->Cart_model->update($items->ctID, array('ctStatus'=>1, 'ctTimeOrder'=>date('Y-m-d H:i:s')));
-				
-				$kitchen['kitCart'] = $items->ctID;
-				$kitchen['kitTable'] = $items->ctTable;
-				$kitchen['kitProduct'] = $items->ctProduct;
-				$kitchen['kitQty'] = $items->ctQty;
-				$kitchen['kitStatus'] = 1;
-				$kitchen['kitTimeOrdered'] = date('Y-m-d H:i:s');
+
+		if (count($unserved_cart)) {
+			$kitchen_ids = array();
+			$order_time = date('Y-m-d H:i:s');
+
+			foreach ($unserved_cart as $items) {
+                // Never create a kitchen record for a cart row belonging to another table.
+                if ((int) $items->ctTable !== (int) $table_id) {
+                    continue;
+                }
+
+				$this->Cart_model->update($items->ctID, array(
+					'ctStatus' => 1,
+					'ctTimeOrder' => $order_time
+				));
+
+				// Keep all ordered items in the kitchen workflow/history.
+				$kitchen = array(
+					'kitCart' => $items->ctID,
+					'kitTable' => (int) $table_id,
+					'kitProduct' => $items->ctProduct,
+					'kitQty' => $items->ctQty,
+					'kitStatus' => 1,
+					'kitTimeOrdered' => $order_time
+				);
 				$kitchenID = $this->Kitchen_model->add($kitchen);
-				if ($kitchenID) {
-					// Type 3 = kitchen ticket, linked to tbl_kitchen.kitID.
-					$this->Prints_model->add(3, null, $kitchenID);
+
+				// catPrinter = 1 routes to the kitchen printer.
+				// 0 = no print, 2 = bar (future), 3 = pantry (future).
+				if ($kitchenID && isset($items->catPrinter) && (int) $items->catPrinter === 1) {
+					$kitchen_ids[] = (int) $kitchenID;
 				}
 			}
-			
-			if(count($cart_items_id)){
 
-				$this->session->set_flashdata('success', 'Order was sent to kitchen');
-				redirect('pos/transactions/order/'.$table_id);
-				return false;
+			// Print all newly ordered Kitchen-category items in one ticket.
+			if (!empty($kitchen_ids)) {
+				$queued = $this->Prints_model->add(
+					3,
+					null,
+					$kitchen_ids[0],
+					array('kitchen_ids' => $kitchen_ids)
+				);
+
+				if (!$queued) {
+					$this->session->set_flashdata('error', 'Order was saved, but the kitchen print job could not be queued');
+					redirect('pos/transactions/order/'.$table_id);
+					return false;
+				}
 			}
-		
-			$this->session->set_flashdata('error', 'Failed to send order in kitchen');
+
+			$this->session->set_flashdata('success', 'Order was sent successfully');
 			redirect('pos/transactions/order/'.$table_id);
-		}else{
-			$this->session->set_flashdata('error', 'Failed to send order in kitchen, no order pending');
-			redirect('pos/transactions/order/'.$table_id);
+			return false;
 		}
 
+		$this->session->set_flashdata('error', 'Failed to send order in kitchen, no order pending');
+		redirect('pos/transactions/order/'.$table_id);
 	}
-	
+
 	public function print_preview($table_id){
 		$cart = $this->Cart_model->getCartByTable($table_id);
 		if (empty($cart)) {

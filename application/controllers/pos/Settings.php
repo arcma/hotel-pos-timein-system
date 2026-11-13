@@ -50,6 +50,16 @@ class Settings extends MY_Controller
             $this->Settings_model->save_settings('cashier_ip', trim((string) $cashierIp));
         }
 
+        $barIp = $this->input->post('bar_ip', TRUE);
+        if ($barIp !== NULL) {
+            $this->Settings_model->save_settings('bar_ip', trim((string) $barIp));
+        }
+
+        $pantryIp = $this->input->post('pantry_ip', TRUE);
+        if ($pantryIp !== NULL) {
+            $this->Settings_model->save_settings('pantry_ip', trim((string) $pantryIp));
+        }
+
         $this->session->set_flashdata('success', 'Settings were updated');
         redirect('pos/settings', 'location');
     }

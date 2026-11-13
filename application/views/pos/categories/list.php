@@ -54,6 +54,7 @@
 		<tr>
 		  <th scope="col">#</th>
 		  <th scope="col" >Name</th>
+		  <th scope="col" class="text-center">Printer</th>
 		  <th scope="col" class="text-center">Sort order</th>
 		  <th scope="col">Status</th>
 		  <th scope="col">Date last modified</th>
@@ -72,6 +73,13 @@
 			<tr <?php if($category->catStatus != "1") echo "class='disabled_td'"; ?>>
 			  <td scope="row"><?=$counter?></td>
 			  <td><?=$category->catName?></td>
+              <td class="text-center">
+                <?php
+                    $printerLabels = array(0 => 'None', 1 => 'Kitchen', 2 => 'Bar', 3 => 'Pantry');
+                    $printerValue = isset($category->catPrinter) ? (int) $category->catPrinter : 0;
+                    echo isset($printerLabels[$printerValue]) ? $printerLabels[$printerValue] : 'None';
+                ?>
+              </td>
 			  <td class="text-center"><?=$category->catSortOrder?></td>
 			  <td>
 				<?php
